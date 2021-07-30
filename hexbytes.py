@@ -65,8 +65,6 @@ class hexbytes(bytearray):
         Set byte value from hexbyte string
         Use [] operator for accessing as integer
         """
-        if index < 0 or index >= len(self):
-            raise IndexError("index out of range")
         self.enforcehexbyte(hex_str)
 
         self[index] = int(hex_str, 16)
@@ -77,8 +75,6 @@ class hexbytes(bytearray):
         Get byte value as hexbyte string
         Use [] operator for accessing as integer
         """
-        if index < 0 or index >= len(self):
-            raise IndexError("index out of range")
 
         return format(self[index], '02x')
 
