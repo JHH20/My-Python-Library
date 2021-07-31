@@ -3,7 +3,7 @@ from .class_decorators import immutify_methods, inherit_methods
 __exclude__ = list(globals())
 
 
-@immutify_methods({'join'})
+@immutify_methods({'join', 'reverse'})
 @inherit_methods
 class hexbytes(bytearray):
     """
