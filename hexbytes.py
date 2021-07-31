@@ -21,7 +21,7 @@ class hexbytes(bytearray):
         - has exactly 2 valid hex characters
         """
 
-        hex_chars = hex_str.upper().split()
+        hex_chars = ''.join(hex_str.upper().split())
         valid_chars = "0123456789ABCDEF"
         return len(hex_chars) == 2 \
             and hex_chars[0] in valid_chars \
