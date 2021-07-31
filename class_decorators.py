@@ -146,6 +146,9 @@ def immutify_methods(cls, methods):
                 raise RuntimeError(f"Immutified method returned a value: {res}")
             return copy_obj
 
+        # Update __qualname__ to reflect current class name
+        wrapped_func.__qualname__ = f"{cls.__name__}.{func_name}"
+
         setattr(cls, func_name, wrapped_func)
 
     for func_name in methods:
