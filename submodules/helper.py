@@ -1,5 +1,5 @@
 """
-Module docstring
+This module defines a collection of disparate functions
 """
 
 import re
@@ -35,6 +35,9 @@ def unsigned_to_signed(num, bits):
 
 
 def signed_to_unsigned(num, bits):
+    """
+    Convert signed number in two's complement to `bits`-bit unsigned number
+    """
     max_val = 1 << (bits - 1)
     if num < -max_val or num >= max_val:
         raise ValueError(f"Signed number`{num}` does not fit in {bits} bits")
@@ -44,6 +47,9 @@ def signed_to_unsigned(num, bits):
 
 
 def wrap_overflow(num, bits, *, signed):
+    """
+    Wrap around number as `bits` bit integer if overflowed or underflowed
+    """
     limit = 1 << bits
     max_val = (limit // 2 - 1) if signed else (limit - 1)
     min_val = -(max_val + 1) if signed else 0
@@ -63,6 +69,7 @@ def wrap_overflow(num, bits, *, signed):
 def split(string, delim, *, maxsplit=0):
     """
     Split `string` on any occurrence of `delim`
+    If maxsplit == 0, split on every occurrence of `delim` (default)
     """
     if not (isinstance(delim, str) or seq_holdstype(delim, str)):
         raise TypeError(f"Argument must be a sequence of str: {delim}")
