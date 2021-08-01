@@ -43,7 +43,7 @@ def signed_to_unsigned(num, bits):
         num += (max_val << 1)
 
 
-def wrap_overflow(num, bits, signed=True):
+def wrap_overflow(num, bits, *, signed):
     limit = 1 << bits
     max_val = (limit // 2 - 1) if signed else (limit - 1)
     min_val = -(max_val + 1) if signed else 0
@@ -60,7 +60,7 @@ def wrap_overflow(num, bits, signed=True):
     return num
 
 
-def split(string, delim, maxsplit=0):
+def split(string, delim, *, maxsplit=0):
     """
     Split `string` on any occurrence of `delim`
     """
