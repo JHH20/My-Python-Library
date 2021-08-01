@@ -24,17 +24,20 @@ def unsigned_to_signed(num, bits):
     """
     Convert unsigned number to `bits`-bit signed number in two's complement
     """
-    assert 0 <= num < (1 << bits)
+    max_val = 1 << bits
+    if num < 0 or num >= max_val:
+        raise ValueError(f"Unsigned number `{num}` does not fit in {bits} bits")
 
-    if num & (1 << (bits-1)):
-        num -= 1 << bits
+    if num & (max_val >> 1):
+        num -= max_val
 
     return num
 
 
 def signed_to_unsigned(num, bits):
     max_val = 1 << (bits - 1)
-    assert -max_val <= num < max_val
+    if num < -max_val or num >= max_val:
+        raise ValueError(f"Signed number`{num}` does not fit in {bits} bits")
 
     if num & max_val:
         num += (max_val << 1)
