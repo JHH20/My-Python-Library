@@ -13,6 +13,16 @@ class hexbytes(bytearray):
     - Altered to only mutate on explicit setters
     """
 
+    def __getitem__(self, key):
+        """
+        Return child class instance when slicing
+        """
+        if isinstance(key, slice):
+            return type(self) (super().__getitem__(key))
+
+        return super().__getitem__(key)
+
+
     @classmethod
     def ishexbyte(cls, hex_str):
         """
@@ -26,6 +36,7 @@ class hexbytes(bytearray):
         return len(hex_chars) == 2 \
             and hex_chars[0] in valid_chars \
             and hex_chars[1] in valid_chars
+
 
     @classmethod
     def enforcehexbyte(cls, hex_str):
