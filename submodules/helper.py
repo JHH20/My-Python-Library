@@ -66,16 +66,18 @@ def wrap_overflow(num, bits, *, signed):
     return num
 
 
-def split(string, delim, *, maxsplit=0):
+def split(string, delim, *, maxsplit=0, keep=False):
     """
     Split `string` on any occurrence of `delim`
     If maxsplit == 0, split on every occurrence of `delim` (default)
+    If keep == True, keep delimiters
     """
     if not (isinstance(delim, str) or seq_holdstype(delim, str)):
         raise TypeError(f"Argument must be a sequence of str: {delim}")
 
     # delim is collection of delimiter characters
-    pattern = f"[{re.escape(''.join(delim))}]+"
+    pattern = re.escape(''.join(delim))
+    pattern = f"([{pattern}]+)" if keep else f"[{pattern}]+"
     return re.split(pattern, string, maxsplit)
 
 
