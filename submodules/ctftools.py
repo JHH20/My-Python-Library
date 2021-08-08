@@ -3,6 +3,8 @@ Module docstring
 """
 
 from subprocess import run as shell
+from pathlib import Path
+from os import access, X_OK
 
 from . import helper
 
@@ -11,6 +13,17 @@ __exclude__ = list(globals())
 
 def exec_shell(cmd):
     return shell(cmd, capture_output=True, shell=True).stdout.decode().strip()
+
+
+def pwn_college():
+    """
+    Get path of pwn.college CTF executable file
+    by finding first executable file in root that does not start with '.'
+    """
+    for file in Path('/').iterdir():
+        if file.is_file() and not file.name.startswith('.') \
+            and access(file, X_OK):
+            return str(file)
 
 
 def parse_objdump_line(line):
