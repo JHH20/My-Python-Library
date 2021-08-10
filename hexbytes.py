@@ -128,12 +128,4 @@ class hexbytes(bytearray):
         return self.__padhex(width, fill_hex, pad_left=False, sign_ext=False)
 
 
-    def encode(self):
-        """
-        Encode hexbytes to escaped string
-        ex) [aa, bb, cc] -> "\xaa\xbb\xcc"
-        """
-        return ''.join(map(chr, self))
-
-
 __all__ = [x for x in globals() if x not in __exclude__ and not x.startswith('_')]
