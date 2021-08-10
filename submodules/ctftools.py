@@ -33,7 +33,7 @@ def exec(cmd, *, binput=None):
     Reference
     - https://bugs.python.org/issue5380
     """
-    if not isinstance(binput, (bytes, bytearray)):
+    if binput is not None and not isinstance(binput, (bytes, bytearray)):
         raise TypeError("Argument must be a byte-like object: {binput}")
 
     fd_p, fd_c = openpty()
