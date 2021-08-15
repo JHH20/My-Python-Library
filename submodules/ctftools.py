@@ -6,6 +6,7 @@ from subprocess import run
 from pathlib import Path
 from pty import openpty
 import os
+import shlex
 
 from . import helper
 
@@ -36,10 +37,47 @@ def exec(cmd, *, binput=None):
     if binput is not None and not isinstance(binput, (bytes, bytearray)):
         raise TypeError("Argument must be a byte-like object: {binput}")
 
+    # Parse file descriptor redirection
+    parsed_cmd = shlex.split(cmd)
+    redirects = []
+    for i, token in enumerate(parsed_cmd):
+        if '<' in token and not token.startswith('<'):
+            try:
+                # Extract desired fd
+                fd_r = int(token.split('<')[0])
+
+                # Will not attempt to open using STD I/O file descriptors
+                if fd_r < 3:
+                    raise ValueError
+
+                # Open file
+                file = open(parsed_cmd[i + 1])
+
+                # Change fd to desired value
+                if fd_r != file.fileno():
+                    os.dup2(file.fileno(), fd_r)
+                    file.close()
+
+                # Add fd to list
+                redirects.append(fd_r)
+            except ValueError:
+                err_msg = "Will not explicitly redirect file to STD I/O"
+                raise ValueError(err_msg) from None
+            except Exception as err:
+                err_msg = "Failed to handle file descriptor redirection"
+                err_tokens = (token, parsed_cmd[i + 1])
+                raise ValueError(f"{err_msg}: {err_tokens}") from err
+
+    # Execute in a pseudo tty
     fd_p, fd_c = openpty()
-    res = run(cmd, input=binput, shell=True, stdout=fd_c, stderr=fd_c)
+    res = run(cmd, input=binput, shell=True, stdout=fd_c, stderr=fd_c, pass_fds=redirects)
     os.close(fd_c)
 
+    # Close redirected file descriptors
+    for fd_r in redirects:
+        os.close(fd_r)
+
+    # Collect shell output
     output = b''
     try:
         last_read = None
