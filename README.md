@@ -1,2 +1,2 @@
-# My-python-library
-Collection of my python modules
+# yscpwn
+My python package for YSC
