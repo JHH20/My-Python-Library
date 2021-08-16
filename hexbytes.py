@@ -108,22 +108,29 @@ class hexbytes(bytearray):
             return self.ljust(width, self.fromhex(fill_hex))
 
 
-    def lpad(self, width, fill_hex=None, *, sign_ext=False):
+    def lpad(self, width, fill_hex=None, *, sign_ext=False, ext=False):
         """
         Extend by repeating fill_hex to the left until new length == width
         If sign_extend == True, fill_hex is ignored and can be omitted
         Else fill_hex must be provided
+        If ext == True, new width = len(self) + width
         """
         if fill_hex is None and not sign_ext:
             raise ValueError("Must provide fill_hex if sign_ext=False")
 
+        if ext:
+            width += len(self)
+
         return self.__padhex(width, fill_hex, pad_left=True, sign_ext=sign_ext)
 
 
-    def rpad(self, width, fill_hex):
+    def rpad(self, width, fill_hex, *, ext=False):
         """
         Extend by repeating fill_hex to the right until new length == width
+        If ext == True, new width = len(self) + width
         """
+        if ext:
+            width += len(self)
 
         return self.__padhex(width, fill_hex, pad_left=False, sign_ext=False)
 
